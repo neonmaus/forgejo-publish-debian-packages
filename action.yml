@@ -33,13 +33,9 @@ runs:
     - name: Set up environment
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y curl
+        sudo apt-get update && sudo apt-get install -y curl
     - name: Run deb-upload.sh
       shell: bash
-      run: |
-        chmod +x $GITHUB_WORKSPACE/deb-upload.sh
-        $GITHUB_WORKSPACE/deb-upload.sh ${{ inputs.deb_files }}
       env:
         USER: ${{ inputs.forgejo_user }}
         TOKEN: ${{ inputs.forgejo_token }}
@@ -47,3 +43,7 @@ runs:
         DIST: ${{ inputs.dist }}
         COMPONENT: ${{ inputs.component }}
         OVERWRITE: ${{ inputs.overwrite }}
+      run: ${{ github.action_path }}/deb-upload.sh ${{ inputs.deb_files }}  
+branding:
+  icon: 'package'  
+  color: 'red'
