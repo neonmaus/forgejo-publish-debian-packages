@@ -83,10 +83,13 @@ fi
 for DEB_FILE in "$@"; do
   echo "Processing file: $DEB_FILE"
 
+  # Extract the filename from the path
+  FILE_NAME=$(basename "$DEB_FILE")
+
   # Extract package name and version from the filename
-  PACKAGE_NAME=$(echo "$DEB_FILE" | cut -d'_' -f1)
-  PACKAGE_VERSION=$(echo "$DEB_FILE" | cut -d'_' -f2)
-  ARCH=$(echo "$DEB_FILE" | cut -d'_' -f3 | cut -d'-' -f1)
+  PACKAGE_NAME=$(echo "$FILE_NAME" | cut -d'_' -f1)
+  PACKAGE_VERSION=$(echo "$FILE_NAME" | cut -d'_' -f2)
+  ARCH=$(echo "$FILE_NAME" | cut -d'_' -f3 | cut -d'-' -f1)
 
   echo "Package name: $PACKAGE_NAME"
   echo "Package version: $PACKAGE_VERSION"
