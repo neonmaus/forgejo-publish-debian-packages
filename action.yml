@@ -1,0 +1,49 @@
+name: 'Upload Debian Packages'
+description: 'Uploads Debian packages to a Forgejo repository'
+inputs:
+  deb_files:
+    description: 'Paths to the .deb files to upload'
+    required: true
+  overwrite:
+    description: 'Set to true to overwrite existing versions'
+    required: false
+    default: 'false'
+  forgejo_user:
+    description: 'Forgejo username'
+    required: false
+    default: ${{ github.repository_owner }}
+  forgejo_token:
+    description: 'Forgejo token'
+    required: true
+  forgejo_server_url:
+    description: 'Forgejo Server URL'
+    required: false
+    default: ${{ github.server_url }}
+  dist:
+    description: 'Distribution'
+    required: false
+    default: 'testing'
+  component:
+    description: 'Component'
+    required: false
+    default: 'main'
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up environment
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
+    - name: Run deb-upload.sh
+      shell: bash
+      run: |
+        chmod +x $GITHUB_WORKSPACE/deb-upload.sh
+        $GITHUB_WORKSPACE/deb-upload.sh ${{ inputs.deb_files }}
+      env:
+        USER: ${{ inputs.forgejo_user }}
+        TOKEN: ${{ inputs.forgejo_token }}
+        FORGEJO_SERVER_URL: ${{ inputs.forgejo_server_url }}
+        DIST: ${{ inputs.dist }}
+        COMPONENT: ${{ inputs.component }}
+        OVERWRITE: ${{ inputs.overwrite }}
